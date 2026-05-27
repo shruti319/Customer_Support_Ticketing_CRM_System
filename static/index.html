@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support CRM — Tickets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #F5F4F0;
+      --surface: #FFFFFF;
+      --surface2: #F0EFE9;
+      --border: #E2E0D8;
+      --text: #1A1916;
+      --text-secondary: #6B6860;
+      --accent: #2D5BE3;
+      --accent-light: #EBF0FD;
+      --open: #1A7F4B;
+      --open-bg: #E6F5ED;
+      --progress: #B45309;
+      --progress-bg: #FEF3C7;
+      --closed: #6B6860;
+      --closed-bg: #F0EFE9;
+      --high: #C5280C;
+      --high-bg: #FEECEB;
+      --medium: #B45309;
+      --medium-bg: #FEF3C7;
+      --low: #1A7F4B;
+      --low-bg: #E6F5ED;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2449c0;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      font-family: var(--mono);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px 0 38px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 14px;
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45, 91, 227, 0.1);
+    }
+
+    .filter-select {
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 14px;
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+      cursor: pointer;
+      min-width: 130px;
+    }
+
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+      cursor: pointer;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: #FAFAF7;
+    }
+
+    td {
+      padding: 13px 16px;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    .ticket-id {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 3px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
+
+    .customer-name {
+      font-weight: 500;
+    }
+
+    .customer-email {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 1px;
+    }
+
+    .subject-text {
+      max-width: 240px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .badge-open {
+      background: var(--open-bg);
+      color: var(--open);
+    }
+
+    .badge-open .badge-dot {
+      background: var(--open);
+    }
+
+    .badge-progress {
+      background: var(--progress-bg);
+      color: var(--progress);
+    }
+
+    .badge-progress .badge-dot {
+      background: var(--progress);
+    }
+
+    .badge-closed {
+      background: var(--closed-bg);
+      color: var(--closed);
+    }
+
+    .badge-closed .badge-dot {
+      background: var(--closed);
+    }
+
+    .priority-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .pri-high {
+      background: var(--high-bg);
+      color: var(--high);
+    }
+
+    .pri-medium {
+      background: var(--medium-bg);
+      color: var(--medium);
+    }
+
+    .pri-low {
+      background: var(--low-bg);
+      color: var(--low);
+    }
+
+    .date-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .empty-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .skel {
+      height: 14px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .skeleton-row td {
+      padding: 16px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 0 16px;
+      }
+
+      main {
+        padding: 20px 16px;
+      }
+
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      th:nth-child(4),
+      td:nth-child(4),
+      th:nth-child(6),
+      td:nth-child(6) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <div class="logo-icon">✦</div>Support CRM
+    </a>
+    <a class="btn btn-primary" href="/create">＋ New Ticket</a>
+  </header>
+  <main>
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">All Tickets</h1>
+        <p class="page-subtitle">Manage and track customer support requests</p>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-open" style="color:var(--open)">—</div>
+        <div class="stat-label">Open</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-progress" style="color:var(--progress)">—</div>
+        <div class="stat-label">In Progress</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-closed" style="color:var(--closed)">—</div>
+        <div class="stat-label">Closed</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" type="text" id="search-input"
+          placeholder="Search by name, email, subject, ticket ID..." />
+      </div>
+      <select class="filter-select" id="status-filter">
+        <option value="">All Statuses</option>
+        <option value="Open">Open</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Closed">Closed</option>
+      </select>
+      <select class="filter-select" id="priority-filter">
+        <option value="">All Priorities</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket ID</th>
+            <th>Customer</th>
+            <th>Subject</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="ticket-table-body">
+          <tr class="skeleton-row">
+            <td>
+              <div class="skel" style="width:70px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:130px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:200px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:60px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:80px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:90px"></div>
+            </td>
+          </tr>
+          <tr class="skeleton-row">
+            <td>
+              <div class="skel" style="width:70px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:100px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:160px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:60px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:80px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:90px"></div>
+            </td>
+          </tr>
+          <tr class="skeleton-row">
+            <td>
+              <div class="skel" style="width:70px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:120px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:180px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:60px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:80px"></div>
+            </td>
+            <td>
+              <div class="skel" style="width:90px"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <script>
+    let searchTimeout = null;
+    document.addEventListener('DOMContentLoaded', () => { loadTickets(); setupFilters(); });
+
+    async function loadTickets(status = '', priority = '', search = '') {
+      try {
+        let url = '/api/tickets?';
+        if (status) url += `status=${encodeURIComponent(status)}&`;
+        if (priority) url += `priority=${encodeURIComponent(priority)}&`;
+        if (search) url += `search=${encodeURIComponent(search)}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error();
+        const tickets = await res.json();
+        renderTable(tickets);
+        updateStats(tickets);
+      } catch { showError(); }
+    }
+
+    function renderTable(tickets) {
+      const tbody = document.getElementById('ticket-table-body');
+      if (!tickets.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No tickets found</div><div>Try changing your search or filter</div></div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = tickets.map(t => `
+        <tr onclick="window.location='/ticket/${t.ticket_id}'">
+          <td><span class="ticket-id">${t.ticket_id}</span></td>
+          <td><div class="customer-name">${esc(t.customer_name)}</div><div class="customer-email">${esc(t.customer_email)}</div></td>
+          <td><div class="subject-text">${esc(t.subject)}</div></td>
+          <td>${priorityBadge(t.priority)}</td>
+          <td>${statusBadge(t.status)}</td>
+          <td><span class="date-text">${fmtDate(t.created_at)}</span></td>
+        </tr>`).join('');
+    }
+
+    function updateStats(tickets) {
+      document.getElementById('stat-total').textContent = tickets.length;
+      document.getElementById('stat-open').textContent = tickets.filter(t => t.status === 'Open').length;
+      document.getElementById('stat-progress').textContent = tickets.filter(t => t.status === 'In Progress').length;
+      document.getElementById('stat-closed').textContent = tickets.filter(t => t.status === 'Closed').length;
+    }
+
+    function setupFilters() {
+      const s = document.getElementById('search-input');
+      const sf = document.getElementById('status-filter');
+      const pf = document.getElementById('priority-filter');
+      s.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => loadTickets(sf.value, pf.value, s.value), 300); });
+      sf.addEventListener('change', () => loadTickets(sf.value, pf.value, s.value));
+      pf.addEventListener('change', () => loadTickets(sf.value, pf.value, s.value));
+    }
+
+    function statusBadge(s) {
+      const m = { 'Open': 'badge-open', 'In Progress': 'badge-progress', 'Closed': 'badge-closed' };
+      return `<span class="badge ${m[s] || 'badge-closed'}"><span class="badge-dot"></span>${s}</span>`;
+    }
+
+    function priorityBadge(p) {
+      const m = { 'High': 'pri-high', 'Medium': 'pri-medium', 'Low': 'pri-low' };
+      return `<span class="priority-badge ${m[p] || 'pri-medium'}">${p || 'Medium'}</span>`;
+    }
+
+    function fmtDate(d) { return new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }); }
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+    function showError() { document.getElementById('ticket-table-body').innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Could not load tickets</div></div></td></tr>`; }
+  </script>
+</body>
+
+</html>

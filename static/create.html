@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support CRM — New Ticket</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #F5F4F0;
+      --surface: #FFFFFF;
+      --surface2: #F0EFE9;
+      --border: #E2E0D8;
+      --text: #1A1916;
+      --text-secondary: #6B6860;
+      --accent: #2D5BE3;
+      --success: #1A7F4B;
+      --success-bg: #E6F5ED;
+      --danger: #C5280C;
+      --danger-bg: #FEECEB;
+      --font: 'DM Sans', sans-serif;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+
+    .back-link:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 7px;
+    }
+
+    .required {
+      color: var(--danger);
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45, 91, 227, 0.1);
+    }
+
+    input.error,
+    textarea.error,
+    select.error {
+      border-color: var(--danger);
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .field-error {
+      font-size: 12px;
+      color: var(--danger);
+      margin-top: 5px;
+      display: none;
+    }
+
+    .field-error.show {
+      display: block;
+    }
+
+    .char-count {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 20px 0;
+    }
+
+    .priority-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .pri-option {
+      display: none;
+    }
+
+    .pri-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 8px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .pri-label:hover {
+      border-color: #aaa;
+    }
+
+    .pri-option:checked+.pri-label {
+      border-color: var(--accent);
+      background: #EBF0FD;
+      color: var(--accent);
+    }
+
+    .pri-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      min-width: 140px;
+      justify-content: center;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #2449c0;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #BBE8CC;
+    }
+
+    .toast.error {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #FBCAC3;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 0 16px;
+      }
+
+      main {
+        padding: 24px 16px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <div class="logo-icon">✦</div>Support CRM
+    </a>
+    <a class="back-link" href="/">← Back to Tickets</a>
+  </header>
+  <main>
+    <h1 class="page-title">Create New Ticket</h1>
+    <p class="page-subtitle">Fill in the customer's details and describe the issue</p>
+    <div class="card">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="customer_name">Customer Name <span class="required">*</span></label>
+          <input type="text" id="customer_name" placeholder="e.g. Priya Sharma" maxlength="100" />
+          <div class="field-error" id="err-name">Please enter the customer's name</div>
+        </div>
+        <div class="form-group">
+          <label for="customer_email">Customer Email <span class="required">*</span></label>
+          <input type="email" id="customer_email" placeholder="e.g. priya@example.com" maxlength="150" />
+          <div class="field-error" id="err-email">Please enter a valid email</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="subject">Issue Title <span class="required">*</span></label>
+        <input type="text" id="subject" placeholder="Short summary of the issue" maxlength="200" />
+        <div class="field-error" id="err-subject">Please enter an issue title</div>
+      </div>
+      <div class="form-group">
+        <label for="description">Description <span class="required">*</span></label>
+        <textarea id="description" placeholder="Describe the issue in detail..." maxlength="2000"></textarea>
+        <div class="char-count"><span id="char-count">0</span> / 2000</div>
+        <div class="field-error" id="err-description">Please describe the issue</div>
+      </div>
+      <hr />
+      <div class="form-group">
+        <label>Priority</label>
+        <div class="priority-row">
+          <div>
+            <input type="radio" name="priority" id="pri-low" value="Low" class="pri-option" />
+            <label for="pri-low" class="pri-label"><span class="pri-dot" style="background:#1A7F4B"></span>Low</label>
+          </div>
+          <div>
+            <input type="radio" name="priority" id="pri-medium" value="Medium" class="pri-option" checked />
+            <label for="pri-medium" class="pri-label"><span class="pri-dot"
+                style="background:#B45309"></span>Medium</label>
+          </div>
+          <div>
+            <input type="radio" name="priority" id="pri-high" value="High" class="pri-option" />
+            <label for="pri-high" class="pri-label"><span class="pri-dot" style="background:#C5280C"></span>High</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <a class="btn btn-ghost" href="/">Cancel</a>
+        <button class="btn btn-primary" id="submit-btn" onclick="submitTicket()">
+          <div class="spinner" id="spinner"></div>
+          <span id="btn-text">Create Ticket</span>
+        </button>
+      </div>
+    </div>
+  </main>
+  <div class="toast" id="toast"></div>
+  <script>
+    document.getElementById('description').addEventListener('input', function () {
+      document.getElementById('char-count').textContent = this.value.length;
+    });
+
+    function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+    function setError(fid, eid, show) {
+      document.getElementById(fid).classList.toggle('error', show);
+      document.getElementById(eid).classList.toggle('show', show);
+    }
+    function validate() {
+      let v = true;
+      const n = document.getElementById('customer_name').value.trim();
+      const e = document.getElementById('customer_email').value.trim();
+      const s = document.getElementById('subject').value.trim();
+      const d = document.getElementById('description').value.trim();
+      if (!n) { setError('customer_name', 'err-name', true); v = false; } else setError('customer_name', 'err-name', false);
+      if (!e || !validateEmail(e)) { setError('customer_email', 'err-email', true); v = false; } else setError('customer_email', 'err-email', false);
+      if (!s) { setError('subject', 'err-subject', true); v = false; } else setError('subject', 'err-subject', false);
+      if (!d) { setError('description', 'err-description', true); v = false; } else setError('description', 'err-description', false);
+      return v;
+    }
+    ['customer_name', 'customer_email', 'subject', 'description'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => document.getElementById(id).classList.remove('error'));
+    });
+
+    async function submitTicket() {
+      if (!validate()) return;
+      const btn = document.getElementById('submit-btn');
+      const spinner = document.getElementById('spinner');
+      const btnText = document.getElementById('btn-text');
+      btn.disabled = true; spinner.style.display = 'block'; btnText.textContent = 'Creating...';
+      const priority = document.querySelector('input[name="priority"]:checked').value;
+      const payload = {
+        customer_name: document.getElementById('customer_name').value.trim(),
+        customer_email: document.getElementById('customer_email').value.trim(),
+        subject: document.getElementById('subject').value.trim(),
+        description: document.getElementById('description').value.trim(),
+        priority
+      };
+      try {
+        const res = await fetch('/api/tickets/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        showToast(`✓ Ticket ${data.ticket_id} created`, 'success');
+        setTimeout(() => window.location = `/ticket/${data.ticket_id}`, 1500);
+      } catch {
+        showToast('✕ Failed to create ticket. Try again.', 'error');
+        btn.disabled = false; spinner.style.display = 'none'; btnText.textContent = 'Create Ticket';
+      }
+    }
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast'); t.textContent = msg; t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.ctrlKey) submitTicket(); });
+  </script>
+</body>
+
+</html>

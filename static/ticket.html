@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support CRM — Ticket Detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #F5F4F0;
+      --surface: #FFFFFF;
+      --surface2: #F0EFE9;
+      --border: #E2E0D8;
+      --text: #1A1916;
+      --text-secondary: #6B6860;
+      --accent: #2D5BE3;
+      --accent-light: #EBF0FD;
+      --open: #1A7F4B;
+      --open-bg: #E6F5ED;
+      --progress: #B45309;
+      --progress-bg: #FEF3C7;
+      --closed: #6B6860;
+      --closed-bg: #F0EFE9;
+      --high: #C5280C;
+      --high-bg: #FEECEB;
+      --medium: #B45309;
+      --medium-bg: #FEF3C7;
+      --low: #1A7F4B;
+      --low-bg: #E6F5ED;
+      --danger: #C5280C;
+      --danger-bg: #FEECEB;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+
+    .back-link:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .ticket-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .ticket-id-badge {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    .ticket-subject {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      line-height: 1.3;
+    }
+
+    .ticket-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .card:last-child {
+      margin-bottom: 0;
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    .detail-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 13px;
+      padding-bottom: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .detail-key {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .detail-val {
+      font-size: 14px;
+    }
+
+    .description-text {
+      font-size: 14px;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .badge-open {
+      background: var(--open-bg);
+      color: var(--open);
+    }
+
+    .badge-open .badge-dot {
+      background: var(--open);
+    }
+
+    .badge-progress {
+      background: var(--progress-bg);
+      color: var(--progress);
+    }
+
+    .badge-progress .badge-dot {
+      background: var(--progress);
+    }
+
+    .badge-closed {
+      background: var(--closed-bg);
+      color: var(--closed);
+    }
+
+    .badge-closed .badge-dot {
+      background: var(--closed);
+    }
+
+    .priority-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .pri-high {
+      background: var(--high-bg);
+      color: var(--high);
+    }
+
+    .pri-medium {
+      background: var(--medium-bg);
+      color: var(--medium);
+    }
+
+    .pri-low {
+      background: var(--low-bg);
+      color: var(--low);
+    }
+
+    .note-item {
+      padding: 12px 14px;
+      background: var(--surface2);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border-left: 3px solid var(--border);
+    }
+
+    .note-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .note-text {
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .note-date {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    .no-notes {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45, 91, 227, 0.1);
+    }
+
+    textarea {
+      min-height: 90px;
+      line-height: 1.6;
+    }
+
+    .edit-form {
+      display: none;
+    }
+
+    .edit-form.active {
+      display: block;
+    }
+
+    .view-content.hidden {
+      display: none;
+    }
+
+    .edit-group {
+      margin-bottom: 14px;
+    }
+
+    .edit-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .edit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      width: 100%;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #2449c0;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .btn-edit {
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid #c5d4f8;
+    }
+
+    .btn-edit:hover {
+      background: #dde8fc;
+    }
+
+    .btn-danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fbb4ad;
+    }
+
+    .btn-danger:hover {
+      background: #fcd8d4;
+    }
+
+    .btn-save {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-save:hover:not(:disabled) {
+      background: #2449c0;
+    }
+
+    .btn-save:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-cancel-edit {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-cancel-edit:hover {
+      background: var(--surface2);
+    }
+
+    .status-select,
+    .priority-select {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+      margin-bottom: 8px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 28px;
+      max-width: 380px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .skel {
+      height: 14px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 200;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: var(--open-bg);
+      color: var(--open);
+      border: 1px solid #BBE8CC;
+    }
+
+    .toast.error {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #FBCAC3;
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 0 16px;
+      }
+
+      main {
+        padding: 20px 16px;
+      }
+
+      .ticket-header {
+        flex-direction: column;
+      }
+
+      .edit-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="/">
+      <div class="logo-icon">✦</div>Support CRM
+    </a>
+    <a class="back-link" href="/">← All Tickets</a>
+  </header>
+  <main id="main-content">
+    <div id="skeleton">
+      <div class="skel" style="width:100px;height:24px;margin-bottom:16px"></div>
+      <div class="skel" style="width:70%;height:28px;margin-bottom:24px"></div>
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:20px">
+        <div class="card">
+          <div class="skel"></div>
+          <div class="skel" style="width:80%"></div>
+          <div class="skel" style="width:60%"></div>
+        </div>
+        <div class="card">
+          <div class="skel"></div>
+          <div class="skel" style="width:70%"></div>
+        </div>
+      </div>
+    </div>
+    <div id="content" style="display:none">
+      <div class="ticket-header">
+        <div>
+          <div class="ticket-id-badge" id="ticket-id-badge">—</div>
+          <h1 class="ticket-subject" id="ticket-subject">Loading...</h1>
+          <div class="ticket-meta">
+            <span class="meta-item" id="ticket-created">—</span>
+            <span class="meta-item" id="ticket-updated">—</span>
+            <span id="priority-display"></span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-edit" onclick="toggleEdit()">✎ Edit</button>
+          <button class="btn btn-danger" onclick="confirmDelete()">🗑 Delete</button>
+        </div>
+      </div>
+
+      <div class="layout">
+        <div>
+          <!-- Description card — view & edit mode -->
+          <div class="card">
+            <div class="card-title">Issue Details</div>
+
+            <!-- VIEW MODE -->
+            <div id="view-content" class="view-content">
+              <p class="description-text" id="ticket-description">—</p>
+            </div>
+
+            <!-- EDIT MODE -->
+            <div id="edit-form" class="edit-form">
+              <div class="edit-row">
+                <div class="edit-group">
+                  <label>Customer Name</label>
+                  <input type="text" id="edit-name" />
+                </div>
+                <div class="edit-group">
+                  <label>Customer Email</label>
+                  <input type="email" id="edit-email" />
+                </div>
+              </div>
+              <div class="edit-group">
+                <label>Issue Title</label>
+                <input type="text" id="edit-subject" />
+              </div>
+              <div class="edit-group">
+                <label>Description</label>
+                <textarea id="edit-description" style="min-height:130px"></textarea>
+              </div>
+              <div class="edit-group">
+                <label>Priority</label>
+                <select id="edit-priority">
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:4px">
+                <button class="btn btn-cancel-edit" onclick="toggleEdit()">Cancel</button>
+                <button class="btn btn-save" id="save-edit-btn" onclick="saveEdit()">Save Changes</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="card">
+            <div class="card-title">Notes & Activity</div>
+            <div id="notes-list"></div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Customer Info -->
+          <div class="card">
+            <div class="card-title">Customer Info</div>
+            <div class="detail-row">
+              <span class="detail-key">Name</span>
+              <span class="detail-val" id="customer-name">—</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-key">Email</span>
+              <span class="detail-val" id="customer-email">—</span>
+            </div>
+          </div>
+
+          <!-- Update Status -->
+          <div class="card">
+            <div class="card-title">Update Status</div>
+            <select class="status-select" id="status-select">
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Closed">Closed</option>
+            </select>
+            <button class="btn btn-primary" id="update-status-btn" onclick="updateStatus()">Save Status</button>
+          </div>
+
+          <!-- Add Note -->
+          <div class="card">
+            <div class="card-title">Add Note</div>
+            <textarea id="note-input" placeholder="Write an internal note..."></textarea>
+            <button class="btn btn-primary" id="add-note-btn" onclick="addNote()">Add Note</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay hidden" id="delete-modal">
+    <div class="modal">
+      <div class="modal-title">Delete this ticket?</div>
+      <div class="modal-desc" id="delete-modal-desc">This will permanently delete the ticket and all its notes. This
+        cannot be undone.</div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-danger" id="confirm-delete-btn" onclick="deleteTicket()">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const ticketId = window.location.pathname.split('/').pop();
+    let currentTicket = null;
+    let editMode = false;
+
+    document.addEventListener('DOMContentLoaded', loadTicket);
+
+    async function loadTicket() {
+      try {
+        const res = await fetch(`/api/tickets/${ticketId}`);
+        if (!res.ok) throw new Error();
+        currentTicket = await res.json();
+        renderTicket(currentTicket);
+        document.getElementById('skeleton').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } catch {
+        document.getElementById('skeleton').innerHTML = `
+          <div style="text-align:center;padding:60px 20px;color:var(--text-secondary)">
+            <div style="font-size:36px;margin-bottom:12px">🔍</div>
+            <div style="font-size:16px;font-weight:500;color:var(--text);margin-bottom:6px">Ticket not found</div>
+            <div>The ticket <strong>${ticketId}</strong> doesn't exist</div>
+            <a href="/" style="display:inline-block;margin-top:16px;color:var(--accent);font-size:14px">← Back to all tickets</a>
+          </div>`;
+      }
+    }
+
+    function renderTicket(t) {
+      document.title = `${t.ticket_id} — Support CRM`;
+      document.getElementById('ticket-id-badge').textContent = t.ticket_id;
+      document.getElementById('ticket-subject').textContent = t.subject;
+      document.getElementById('ticket-description').textContent = t.description;
+      document.getElementById('customer-name').textContent = t.customer_name;
+      document.getElementById('customer-email').textContent = t.customer_email;
+      document.getElementById('ticket-created').textContent = '📅 ' + fmtDate(t.created_at);
+      document.getElementById('ticket-updated').textContent = '🔄 ' + fmtDate(t.updated_at);
+      document.getElementById('priority-display').innerHTML = priorityBadge(t.priority);
+      document.getElementById('status-select').value = t.status;
+      renderNotes(t.notes);
+    }
+
+    function renderNotes(notes) {
+      const c = document.getElementById('notes-list');
+      if (!notes || !notes.length) { c.innerHTML = '<div class="no-notes">No notes yet.</div>'; return; }
+      c.innerHTML = notes.map(n => `
+        <div class="note-item">
+          <div class="note-text">${esc(n.note_text)}</div>
+          <div class="note-date">${fmtDate(n.created_at)}</div>
+        </div>`).join('');
+    }
+
+    // ── EDIT MODE ─────────────────────────────────────────────────────────
+    function toggleEdit() {
+      editMode = !editMode;
+      const form = document.getElementById('edit-form');
+      const view = document.getElementById('view-content');
+      form.classList.toggle('active', editMode);
+      view.classList.toggle('hidden', editMode);
+
+      if (editMode && currentTicket) {
+        document.getElementById('edit-name').value = currentTicket.customer_name;
+        document.getElementById('edit-email').value = currentTicket.customer_email;
+        document.getElementById('edit-subject').value = currentTicket.subject;
+        document.getElementById('edit-description').value = currentTicket.description;
+        document.getElementById('edit-priority').value = currentTicket.priority;
+        document.getElementById('ticket-subject').textContent = 'Editing ticket...';
+      } else if (currentTicket) {
+        document.getElementById('ticket-subject').textContent = currentTicket.subject;
+      }
+    }
+
+    async function saveEdit() {
+      const btn = document.getElementById('save-edit-btn');
+      btn.disabled = true; btn.textContent = 'Saving...';
+      const payload = {
+        customer_name: document.getElementById('edit-name').value.trim(),
+        customer_email: document.getElementById('edit-email').value.trim(),
+        subject: document.getElementById('edit-subject').value.trim(),
+        description: document.getElementById('edit-description').value.trim(),
+        priority: document.getElementById('edit-priority').value
+      };
+      try {
+        const res = await fetch(`/api/tickets/${ticketId}`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error();
+        showToast('✓ Ticket updated', 'success');
+        const updated = await fetch(`/api/tickets/${ticketId}`);
+        currentTicket = await updated.json();
+        renderTicket(currentTicket);
+        editMode = false;
+        document.getElementById('edit-form').classList.remove('active');
+        document.getElementById('view-content').classList.remove('hidden');
+      } catch {
+        showToast('✕ Failed to save changes', 'error');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Save Changes';
+      }
+    }
+
+    // ── UPDATE STATUS ─────────────────────────────────────────────────────
+    async function updateStatus() {
+      const status = document.getElementById('status-select').value;
+      const btn = document.getElementById('update-status-btn');
+      btn.disabled = true; btn.textContent = 'Saving...';
+      try {
+        const res = await fetch(`/api/tickets/${ticketId}`, {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status })
+        });
+        if (!res.ok) throw new Error();
+        showToast('✓ Status updated', 'success');
+        currentTicket.status = status;
+      } catch { showToast('✕ Failed to update status', 'error'); }
+      finally { btn.disabled = false; btn.textContent = 'Save Status'; }
+    }
+
+    // ── ADD NOTE ──────────────────────────────────────────────────────────
+    async function addNote() {
+      const input = document.getElementById('note-input');
+      const note = input.value.trim();
+      if (!note) { showToast('Please write a note first', 'error'); return; }
+      const btn = document.getElementById('add-note-btn');
+      btn.disabled = true; btn.textContent = 'Adding...';
+      try {
+        const res = await fetch(`/api/tickets/${ticketId}`, {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ note })
+        });
+        if (!res.ok) throw new Error();
+        input.value = '';
+        showToast('✓ Note added', 'success');
+        const updated = await fetch(`/api/tickets/${ticketId}`);
+        const data = await updated.json();
+        renderNotes(data.notes);
+        document.getElementById('ticket-updated').textContent = '🔄 ' + fmtDate(data.updated_at);
+      } catch { showToast('✕ Failed to add note', 'error'); }
+      finally { btn.disabled = false; btn.textContent = 'Add Note'; }
+    }
+
+    // ── DELETE ────────────────────────────────────────────────────────────
+    function confirmDelete() {
+      document.getElementById('delete-modal-desc').textContent =
+        `This will permanently delete ticket ${ticketId} and all its notes. This cannot be undone.`;
+      document.getElementById('delete-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('delete-modal').classList.add('hidden');
+    }
+
+    async function deleteTicket() {
+      const btn = document.getElementById('confirm-delete-btn');
+      btn.disabled = true; btn.textContent = 'Deleting...';
+      try {
+        const res = await fetch(`/api/tickets/${ticketId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error();
+        showToast('✓ Ticket deleted', 'success');
+        setTimeout(() => window.location = '/', 1200);
+      } catch {
+        showToast('✕ Failed to delete ticket', 'error');
+        btn.disabled = false; btn.textContent = 'Yes, Delete';
+        closeModal();
+      }
+    }
+
+    // ── HELPERS ───────────────────────────────────────────────────────────
+    function priorityBadge(p) {
+      const m = { 'High': 'pri-high', 'Medium': 'pri-medium', 'Low': 'pri-low' };
+      return `<span class="priority-badge ${m[p] || 'pri-medium'}">${p || 'Medium'}</span>`;
+    }
+
+    function fmtDate(d) {
+      return new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Close modal on overlay click
+    document.getElementById('delete-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+  </script>
+</body>
+
+</html>
