@@ -3,7 +3,7 @@
 A fully functional customer support ticketing system built with **FastAPI + Supabase + Vanilla JS**.
 
 ## Live Demo
-🔗 [Your deployed URL here]
+🔗 [Not Yet Deployed. Will Deploy soon!!]
 
 ## Tech Stack
 | Layer | Technology |
