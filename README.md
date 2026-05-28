@@ -3,7 +3,7 @@
 A fully functional customer support ticketing system built with **FastAPI + Supabase + Vanilla JS**.
 
 ## Live Demo
-🔗 [Not Yet Deployed. Will Deploy soon!!]
+🔗 (https://customer-support-ticketing-crm-system-ceal.onrender.com)
 
 ## Tech Stack
 | Layer | Technology |
