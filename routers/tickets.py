@@ -16,9 +16,11 @@ router = APIRouter(prefix="/api/tickets", tags=["tickets"])
  
  
 def generate_ticket_id(db: Session) -> str:
-   
-    count = db.query(Ticket).count()
-    return f"TKT-{str(count + 1).zfill(3)}"
+    last_ticket = db.query(Ticket).order_by(Ticket.created_at.desc()).first()
+    if not last_ticket:
+        return "TKT-001"
+    last_num = int(last_ticket.ticket_id.split("-")[1])
+    return f"TKT-{str(last_num + 1).zfill(3)}"
  
  
 def build_ticket_response(t: Ticket) -> TicketResponse:
