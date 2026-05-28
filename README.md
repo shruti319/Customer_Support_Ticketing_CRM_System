@@ -11,7 +11,7 @@ A fully functional customer support ticketing system built with **FastAPI + Supa
 | Backend | Python 3.11 + FastAPI |
 | Database | Supabase (PostgreSQL) |
 | Frontend | HTML + CSS + Vanilla JS |
-| Deployment | Railway |
+| Deployment | Render |
 
 ## Features
 - ✅ Create tickets with customer info, subject, and description
